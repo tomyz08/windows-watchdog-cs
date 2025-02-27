@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "windows-watchdog-cs", "windows-watchdog-cs.csproj", "{C9449DB7-1655-40C6-9A46-D48E3FA114BA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C9449DB7-1655-40C6-9A46-D48E3FA114BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9449DB7-1655-40C6-9A46-D48E3FA114BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9449DB7-1655-40C6-9A46-D48E3FA114BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9449DB7-1655-40C6-9A46-D48E3FA114BA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1A4DC6F5-2C8C-464A-A65C-92B749857B06}
+	EndGlobalSection
+EndGlobal
