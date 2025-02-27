@@ -1,1 +1,1 @@
-# windows-watchdog-cs
+# A Windows Task Monitoring App (windows-watchdog-cs)
