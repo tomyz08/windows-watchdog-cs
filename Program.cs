@@ -35,7 +35,8 @@ namespace windows_watchdog_cs
         private void myProcess_Exited(object sender, System.EventArgs e)
         {
             Console.WriteLine(
-                $"\nID del Proceso      : {myProcess.Id}\n" +
+                $"\n" +
+                $"ID del Proceso      : {myProcess.Id}\n" +
                 $"Nombre del Proceso  : {myProcess.ProcessName}\n" +
                 $"Hora de Cierre      : {myProcess.ExitTime}\n" +
                 $"Codigo de Cierre    : {myProcess.ExitCode}\n" +
