@@ -37,7 +37,6 @@ namespace windows_watchdog_cs
             Console.WriteLine(
                 $"\n" +
                 $"ID del Proceso      : {myProcess.Id}\n" +
-                $"Nombre del Proceso  : {myProcess.ProcessName}\n" +
                 $"Hora de Cierre      : {myProcess.ExitTime}\n" +
                 $"Codigo de Cierre    : {myProcess.ExitCode}\n" +
                 $"Tiempo Transcurrido : {Math.Round((myProcess.ExitTime - myProcess.StartTime).TotalMilliseconds)}");
@@ -73,8 +72,8 @@ namespace windows_watchdog_cs
                         catch (Exception ex)
                         {
                             Console.WriteLine(
-                                $"Ocurrio un error terminando la instancia ID \"{processesByName[i].Id}\" " +
-                                $"de la app/proceso \"{processesByName[i].ProcessName}\":\n{ex.Message}");
+                                $"Ocurrio un error terminando la instancia ID \"{myProcess.Id}\" " +
+                                $"de la app/proceso \"{myProcess.ProcessName}\":\n{ex.Message}");
                             return;
                         }
                     }
@@ -82,7 +81,7 @@ namespace windows_watchdog_cs
                 }                
             }
         }
-        public static async Task Main(string[] args)
+        static async Task Main(string[] args)
         {
             ApplicationConfiguration.Initialize();
             Console.WriteLine("Ingrese el nombre de la app/proceso:");
@@ -93,8 +92,8 @@ namespace windows_watchdog_cs
                 return;
             }
             Program myProcess = new Program();
-            await myProcess.KillAdditionalInstances(inputApp);
-            //await myProcess.StartProcess(inputApp);
+            //await myProcess.KillAdditionalInstances(inputApp);
+            await myProcess.StartProcess(inputApp);
             Console.ReadKey();
         }
     }
