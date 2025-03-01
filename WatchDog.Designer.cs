@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             tbProcess = new TextBox();
             btnMonitor = new Button();
             btnKill = new Button();
             lbProcesses = new ListBox();
             txtSearch = new TextBox();
+            tmrClock = new System.Windows.Forms.Timer(components);
             SuspendLayout();
             // 
             // tbProcess
@@ -80,6 +82,10 @@
             txtSearch.Size = new Size(1134, 27);
             txtSearch.TabIndex = 4;
             // 
+            // tmrClock
+            // 
+            tmrClock.Tick += tmrClock_Tick;
+            // 
             // WatchDog
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -104,5 +110,6 @@
         private Button btnKill;
         private ListBox lbProcesses;
         private TextBox txtSearch;
+        private System.Windows.Forms.Timer tmrClock;
     }
 }
