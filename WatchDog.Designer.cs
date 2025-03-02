@@ -35,6 +35,7 @@
             tabMenu = new TabControl();
             tpAllProcesses = new TabPage();
             gbAllProcesses = new GroupBox();
+            btnRefresh = new Button();
             lbAllProcesses = new ListBox();
             btnMonitor = new Button();
             gbSearchAll = new GroupBox();
@@ -44,7 +45,6 @@
             lbMonitoredProcess = new ListBox();
             gbSearchMonitored = new GroupBox();
             txtSearchMonitored = new TextBox();
-            btnRefresh = new Button();
             tabMenu.SuspendLayout();
             tpAllProcesses.SuspendLayout();
             gbAllProcesses.SuspendLayout();
@@ -59,6 +59,8 @@
             tbLog.Location = new Point(411, 12);
             tbLog.Multiline = true;
             tbLog.Name = "tbLog";
+            tbLog.ReadOnly = true;
+            tbLog.ScrollBars = ScrollBars.Both;
             tbLog.Size = new Size(574, 499);
             tbLog.TabIndex = 0;
             // 
@@ -110,6 +112,16 @@
             gbAllProcesses.TabStop = false;
             gbAllProcesses.Text = "Procesos Activos";
             // 
+            // btnRefresh
+            // 
+            btnRefresh.Location = new Point(6, 295);
+            btnRefresh.Name = "btnRefresh";
+            btnRefresh.Size = new Size(355, 36);
+            btnRefresh.TabIndex = 5;
+            btnRefresh.Text = "Actualizar";
+            btnRefresh.UseVisualStyleBackColor = true;
+            btnRefresh.Click += btnRefresh_Click;
+            // 
             // lbAllProcesses
             // 
             lbAllProcesses.FormattingEnabled = true;
@@ -126,6 +138,7 @@
             btnMonitor.TabIndex = 7;
             btnMonitor.Text = "Monitorear";
             btnMonitor.UseVisualStyleBackColor = true;
+            btnMonitor.Click += btnMonitor_Click;
             // 
             // gbSearchAll
             // 
@@ -193,16 +206,6 @@
             txtSearchMonitored.Size = new Size(355, 27);
             txtSearchMonitored.TabIndex = 5;
             txtSearchMonitored.TextChanged += txtSearchMonitored_TextChanged;
-            // 
-            // btnRefresh
-            // 
-            btnRefresh.Location = new Point(6, 295);
-            btnRefresh.Name = "btnRefresh";
-            btnRefresh.Size = new Size(355, 36);
-            btnRefresh.TabIndex = 5;
-            btnRefresh.Text = "Actualizar";
-            btnRefresh.UseVisualStyleBackColor = true;
-            btnRefresh.Click += btnRefresh_Click;
             // 
             // WatchDog
             // 
