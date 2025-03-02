@@ -2,16 +2,11 @@
 using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Threading;
 
 namespace windows_watchdog_cs
 {
@@ -51,6 +46,16 @@ namespace windows_watchdog_cs
         {
             try
             {
+                if (filePath == "Acceso denegado")
+                {
+                    LogMessage("No se puede iniciar el proceso porque el acceso este esta restringido.");
+                    return;
+                }
+                if (!File.Exists(filePath))
+                {
+                    LogMessage($"El archivo \"{filePath}\" no existe. No se puede iniciar el proceso.");
+                    return;
+                }
                 Process process = new Process
                 {
                     StartInfo = new ProcessStartInfo
@@ -85,50 +90,86 @@ namespace windows_watchdog_cs
             LogMessage($"Instancias adicionales de {processName} terminadas.");
         }
 
-        private void WatchDog_Load(object sender, EventArgs e)
+        private string GetProcessFilePath(string processName)
         {
-            lbProcesses.DataSource = GetAllProcesses();
-            lbProcesses.DisplayMember = "ProcessName";
-            if (File.Exists(configFile))
+            try
             {
-                try
+                Process[] processes = Process.GetProcessesByName(processName);
+                if (processes.Length > 0)
                 {
-                    string json = File.ReadAllText(configFile);
-                    monitoredProcesses = JsonSerializer.Deserialize<List<MonitoredProcess>>(json);
-                }
-                catch (Exception ex)
-                {
-                    LogMessage($"Error leyendo configuración: {ex.Message}");
+                    return processes[0].MainModule.FileName;
                 }
             }
-        }
+            catch (Exception ex)
+            {
+                LogMessage($"No se pudo obtener la ruta de {processName}: {ex.Message}");
+            }
 
-        private void btnMonitor_Click(object sender, EventArgs e)
-        {
-            string selectedProcess = lbProcesses.Text;
-            DialogResult dialog = MessageBox.Show("Deseas empezar a monitorea esta app/proceso?", "Confirmacion de Monitoreo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dialog == DialogResult.Yes)
-            {
-                monitoredProcesses.Add(new MonitoredProcess
-                {
-                    ProcessName = selectedProcess,
-                    IsMonitored = true
-                });
-                SaveMonitoredProcesses();
-                LogMessage($"{selectedProcess} agregado a la lista de monitoreo.");
-            }
+            return "Acceso denegado";
         }
 
         private void SaveMonitoredProcesses()
         {
             try
             {
+                string directory = Path.GetDirectoryName(configFile);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
                 string json = JsonSerializer.Serialize(monitoredProcesses, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(configFile, json);
+                LogMessage("Lista de procesos monitoreados guardada correctamente.");
             }
             catch (Exception ex)
             {
-                LogMessage($"Error guardando configuración: {ex.Message}");
+                LogMessage($"Error guardando configuracion: {ex.Message}");
+            }
+        }
+
+        private void WatchDog_Load(object sender, EventArgs e)
+        {
+            lbAllProcesses.DataSource = GetAllProcesses();
+            lbAllProcesses.DisplayMember = "ProcessName";
+            if (File.Exists(configFile))
+            {
+                try
+                {
+                    string json = File.ReadAllText(configFile);
+                    monitoredProcesses = JsonSerializer.Deserialize<List<MonitoredProcess>>(json);
+                    lbMonitoredProcess.DataSource = monitoredProcesses;
+                    lbMonitoredProcess.DisplayMember = "ProcessName";
+                }
+                catch (Exception ex)
+                {
+                    LogMessage($"Error leyendo configuracion: {ex.Message}");
+                }
+            }
+            else
+            {
+                LogMessage("No se encontro un archivo de configuracion. Se creará un nuevo archivo.");
+                monitoredProcesses = new List<MonitoredProcess>();
+                SaveMonitoredProcesses();
+            }
+            tmrClock.Interval = 5000;
+            tmrClock.Start();
+        }
+
+        private void btnMonitor_Click(object sender, EventArgs e)
+        {
+            string selectedProcess = lbAllProcesses.Text;
+            DialogResult dialog = MessageBox.Show("Deseas empezar a monitorea esta app/proceso?", "Confirmacion de Monitoreo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialog == DialogResult.Yes)
+            {
+                string filePath = GetProcessFilePath(selectedProcess);
+                monitoredProcesses.Add(new MonitoredProcess
+                {
+                    ProcessName = selectedProcess,
+                    FileName = filePath,
+                    IsMonitored = true
+                });
+                SaveMonitoredProcesses();
+                LogMessage($"{selectedProcess} agregado a la lista de monitoreo.");
             }
         }
 
@@ -139,12 +180,12 @@ namespace windows_watchdog_cs
                 var processes = Process.GetProcessesByName(monitored.ProcessName);
                 if (processes.Length == 0)
                 {
-                    LogMessage($"Se detectó que {monitored.ProcessName} se ha detenido. Iniciándolo nuevamente...");
+                    LogMessage($"Se detecto que {monitored.ProcessName} se ha detenido. Iniciandolo nuevamente...");
                     StartProcess(monitored.FileName);
                 }
                 else if (processes.Length > 1)
                 {
-                    LogMessage($"Se detectaron instancias adicionales de {monitored.ProcessName}. Terminándolas...");
+                    LogMessage($"Se detectaron instancias adicionales de {monitored.ProcessName}. Terminando...");
                     KillAdditionalInstances(processes, monitored.ProcessName);
                 }
             }
@@ -157,7 +198,42 @@ namespace windows_watchdog_cs
                 Invoke(new Action(() => LogMessage(message)));
                 return;
             }
-            tbProcess.AppendText($"{DateTime.Now}: {message}{Environment.NewLine}");
+            tbLog.AppendText($"{DateTime.Now}: {message}{Environment.NewLine}");
+        }
+
+        private void btnKill_Click(object sender, EventArgs e)
+        {
+            string selectedProcess = lbMonitoredProcess.Text;
+            try
+            {
+                Process[] processes = Process.GetProcessesByName(selectedProcess);
+                if (processes.Length > 0)
+                {
+                    processes[0].Kill();
+                    processes[0].WaitForExit();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogMessage($"Error terminando el proceso {selectedProcess}: {ex.Message}");
+            }
+            LogMessage($"Se termino el proceso {selectedProcess} correctamente.");
+        }
+
+        private void txtSearchAll_TextChanged(object sender, EventArgs e)
+        {
+            lbAllProcesses.SelectedIndex = lbAllProcesses.FindString(txtSearchAll.Text);
+        }
+
+        private void txtSearchMonitored_TextChanged(object sender, EventArgs e)
+        {
+            lbMonitoredProcess.SelectedIndex = lbMonitoredProcess.FindString(txtSearchMonitored.Text);
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            lbAllProcesses.DataSource = GetAllProcesses();
+            lbAllProcesses.DisplayMember = "ProcessName";
         }
     }
 }
