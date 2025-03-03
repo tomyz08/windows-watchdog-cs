@@ -10,11 +10,62 @@ namespace windows_watchdog_cs
         private readonly ProcessService processService = new ProcessService();
         private readonly FileService fileService;
         private List<MonitoredProcess> monitoredProcesses = new List<MonitoredProcess>();
+        private NotifyIcon trayIcon;
+        private ContextMenuStrip trayMenu;
 
         public WatchDog()
         {
             InitializeComponent();
+            InitializeTray();
             fileService = new FileService("monitored-apps.json");
+        }
+
+        private void InitializeTray()
+        {
+            trayMenu = new ContextMenuStrip();
+            trayMenu.Items.Add("Abir", null, ShowApp);
+            trayMenu.Items.Add("Cerrar", null, ExitApp);
+
+            trayIcon = new NotifyIcon
+            {
+                Icon = SystemIcons.Application,
+                ContextMenuStrip = trayMenu,
+                Visible = false,
+                Text = "WatchDog"
+            };
+            trayIcon.DoubleClick += ShowApp;
+        }
+
+        private void ShowApp(object? sender, EventArgs e)
+        {
+            Show();
+            WindowState = FormWindowState.Normal;
+            ShowInTaskbar = true;
+            trayIcon.Visible = false;
+        }
+
+        private void ExitApp(object? sender, EventArgs e)
+        {
+            trayIcon.Visible = false;
+            trayIcon.Dispose();
+            Application.Exit();
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            if(WindowState == FormWindowState.Minimized)
+            {
+                Hide();
+                ShowInTaskbar = false;
+                trayIcon.Visible = true;
+            }
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            trayIcon.Dispose();
         }
 
         private void LogMessage(string message)
