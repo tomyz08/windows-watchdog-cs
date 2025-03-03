@@ -115,18 +115,18 @@ namespace windows_watchdog_cs
 
         private async void tmrClock_Tick(object sender, EventArgs e)
         {
-            foreach (var monitored in monitoredProcesses)
+            foreach (var monitoredProcess in monitoredProcesses)
             {
-                var processes = Process.GetProcessesByName(monitored.ProcessName);
+                var processes = Process.GetProcessesByName(monitoredProcess.ProcessName);
                 if (processes.Length == 0)
                 {
-                    LogMessage($"Se detecto que {monitored.ProcessName} se ha detenido. Iniciandolo nuevamente...");
-                    await processService.StartProcess(monitored.FileName, LogMessage);
+                    LogMessage($"Se detecto que {monitoredProcess.ProcessName} se ha detenido. Iniciandolo nuevamente...");
+                    await processService.StartProcess(monitoredProcess.FileName, LogMessage);
                 }
                 else if (processes.Length > 1)
                 {
-                    LogMessage($"Se detectaron instancias adicionales de {monitored.ProcessName}. Terminando...");
-                    await processService.KillAdditionalInstances(processes, monitored.ProcessName, LogMessage);
+                    LogMessage($"Se detectaron instancias adicionales de {monitoredProcess.ProcessName}. Terminando...");
+                    await processService.KillAdditionalInstances(processes, monitoredProcess.ProcessName, LogMessage);
                 }
             }
         }
