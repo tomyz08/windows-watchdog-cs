@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using windows_watchdog_cs.Models;
 using windows_watchdog_cs.Services;
+using Microsoft.Toolkit.Uwp.Notifications;
+using System.Windows.Forms;
 
 namespace windows_watchdog_cs
 {
@@ -18,6 +20,7 @@ namespace windows_watchdog_cs
             InitializeComponent();
             InitializeTray();
             fileService = new FileService("monitored-apps.json");
+            ToastNotificationManagerCompat.OnActivated += ToastActivated;
         }
 
         private void InitializeTray()
@@ -68,6 +71,20 @@ namespace windows_watchdog_cs
             trayIcon.Dispose();
         }
 
+        private void RestoreFromTray()
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(RestoreFromTray));
+                return;
+            }
+
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+            this.ShowInTaskbar = true;
+            trayIcon.Visible = false;
+        }
+
         private void LogMessage(string message)
         {
             if (InvokeRequired)
@@ -76,6 +93,26 @@ namespace windows_watchdog_cs
                 return;
             }
             tbLog.AppendText($"{DateTime.Now}: {message}{Environment.NewLine}");
+        }
+
+        private void ShowToastNotification(string title, string message, string processName)
+        {
+            new ToastContentBuilder()
+                .AddText(title)
+                .AddText(message)
+                .AddArgument("restore", "true")
+                .AddArgument("processName", processName)
+                .Show(toast => toast.ExpirationTime = DateTime.Now.AddSeconds(5));
+        }
+
+        private void ToastActivated(ToastNotificationActivatedEventArgsCompat e)
+        {
+            var args = ToastArguments.Parse(e.Argument);
+
+            if (args.TryGetValue("restore", out string restoreValue) && restoreValue == "true")
+            {
+                RestoreFromTray();
+            }
         }
 
         private async void WatchDog_Load(object sender, EventArgs e)
@@ -120,12 +157,22 @@ namespace windows_watchdog_cs
                 var processes = Process.GetProcessesByName(monitoredProcess.ProcessName);
                 if (processes.Length == 0)
                 {
-                    LogMessage($"Se detecto que {monitoredProcess.ProcessName} se ha detenido. Iniciandolo nuevamente...");
+                    string message = $"Se detecto que {monitoredProcess.ProcessName} se ha detenido. Iniciandolo nuevamente...";
+                    LogMessage(message);
+                    if (!this.Visible)
+                    {
+                        ShowToastNotification("Proceso detenido", message, monitoredProcess.ProcessName);
+                    }
                     await processService.StartProcess(monitoredProcess.FileName, LogMessage);
                 }
                 else if (processes.Length > 1)
                 {
-                    LogMessage($"Se detectaron instancias adicionales de {monitoredProcess.ProcessName}. Terminando...");
+                    string message = $"Se detectaron instancias adicionales de {monitoredProcess.ProcessName}. Terminando...";
+                    LogMessage(message);
+                    if (!this.Visible)
+                    {
+                        ShowToastNotification("Múltiples instancias detectadas", message, monitoredProcess.ProcessName);
+                    }
                     await processService.KillAdditionalInstances(processes, monitoredProcess.ProcessName, LogMessage);
                 }
             }
