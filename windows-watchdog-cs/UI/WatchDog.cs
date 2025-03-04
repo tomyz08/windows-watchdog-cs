@@ -19,7 +19,7 @@ namespace windows_watchdog_cs
         {
             InitializeComponent();
             InitializeTray();
-            fileService = new FileService("monitored-apps.json");
+            fileService = new FileService(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "windows-watchdog", "monitored-apps.json"));
             ToastNotificationManagerCompat.OnActivated += ToastActivated;
         }
 

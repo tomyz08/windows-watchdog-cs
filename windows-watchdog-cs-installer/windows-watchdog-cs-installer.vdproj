@@ -15,7 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_F2A7DFD29F6F42DA9EF8CA84B54E1809"
+        "MsmKey" = "8:_46CF815D124D46EB8C4BA8C8130AEFBE"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -37,6 +37,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -53,6 +61,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
+            }
         }
     }
     "Deployable"
@@ -141,7 +165,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:WatchDog"
         "ProductCode" = "8:{F44B6C86-81D9-4BF3-8B21-FA967D5A74FB}"
-        "PackageCode" = "8:{E34D76C2-6908-4EB9-B477-333AB3C1503B}"
+        "PackageCode" = "8:{95A2D1AD-C646-485D-9258-57A8138E9308}"
         "UpgradeCode" = "8:{222E71D3-B9C4-4EB0-87EF-10EE619C6A82}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -261,7 +285,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_13CB87CF3F0344EEA10555D5B3E80430"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_C8323BF126EB42F990F561E1FDDB00A4"
             {
             "Name" = "8:WatchDog"
             "Arguments" = "8:"
@@ -269,7 +293,7 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_F2A7DFD29F6F42DA9EF8CA84B54E1809"
+            "Target" = "8:_46CF815D124D46EB8C4BA8C8130AEFBE"
             "Folder" = "8:_983B13E61408447DA7EC4377FFB36331"
             "WorkingFolder" = "8:_CF1B4A71368843F9874AAF346896B2AC"
             "Icon" = "8:"
@@ -674,9 +698,9 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_F2A7DFD29F6F42DA9EF8CA84B54E1809"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_46CF815D124D46EB8C4BA8C8130AEFBE"
             {
-            "SourcePath" = "8:..\\windows-watchdog-cs\\obj\\Debug\\net8.0-windows10.0.19041.0\\windows-watchdog-cs.dll"
+            "SourcePath" = "8:..\\windows-watchdog-cs\\obj\\Release\\net8.0-windows10.0.19041.0\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_CF1B4A71368843F9874AAF346896B2AC"
@@ -695,7 +719,7 @@
             "IsolateTo" = "8:"
             "ProjectOutputGroupRegister" = "3:1"
             "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:Built"
+            "OutputGroupCanonicalName" = "8:PublishItems"
             "OutputProjectGuid" = "8:{8B058802-2D58-70AD-6635-625CFEC03072}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
