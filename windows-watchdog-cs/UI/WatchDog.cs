@@ -57,7 +57,7 @@ namespace windows_watchdog_cs
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-            if(WindowState == FormWindowState.Minimized)
+            if (WindowState == FormWindowState.Minimized)
             {
                 Hide();
                 ShowInTaskbar = false;
@@ -210,6 +210,13 @@ namespace windows_watchdog_cs
         {
             lbAllProcesses.DataSource = await processService.GetAllProcesses();
             lbAllProcesses.DisplayMember = "ProcessName";
+        }
+
+        private async void btnRefreshMonitored_Click(object sender, EventArgs e)
+        {
+            monitoredProcesses = await fileService.LoadMonitoredProcesses(LogMessage);
+            lbMonitoredProcess.DataSource = monitoredProcesses;
+            lbMonitoredProcess.DisplayMember = "ProcessName";
         }
     }
 }

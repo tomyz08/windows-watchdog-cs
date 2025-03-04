@@ -45,6 +45,7 @@
             lbMonitoredProcess = new ListBox();
             gbSearchMonitored = new GroupBox();
             txtSearchMonitored = new TextBox();
+            btnRefreshMonitored = new Button();
             tabMenu.SuspendLayout();
             tpAllProcesses.SuspendLayout();
             gbAllProcesses.SuspendLayout();
@@ -66,9 +67,9 @@
             // 
             // btnKill
             // 
-            btnKill.Location = new Point(6, 431);
+            btnKill.Location = new Point(6, 419);
             btnKill.Name = "btnKill";
-            btnKill.Size = new Size(373, 29);
+            btnKill.Size = new Size(373, 41);
             btnKill.TabIndex = 2;
             btnKill.Text = "Cerrar";
             btnKill.UseVisualStyleBackColor = true;
@@ -132,9 +133,9 @@
             // 
             // btnMonitor
             // 
-            btnMonitor.Location = new Point(6, 425);
+            btnMonitor.Location = new Point(6, 419);
             btnMonitor.Name = "btnMonitor";
-            btnMonitor.Size = new Size(373, 35);
+            btnMonitor.Size = new Size(373, 41);
             btnMonitor.TabIndex = 7;
             btnMonitor.Text = "Monitorear";
             btnMonitor.UseVisualStyleBackColor = true;
@@ -173,6 +174,7 @@
             // 
             // gbMonitoredProcess
             // 
+            gbMonitoredProcess.Controls.Add(btnRefreshMonitored);
             gbMonitoredProcess.Controls.Add(lbMonitoredProcess);
             gbMonitoredProcess.Location = new Point(6, 82);
             gbMonitoredProcess.Name = "gbMonitoredProcess";
@@ -186,7 +188,7 @@
             lbMonitoredProcess.FormattingEnabled = true;
             lbMonitoredProcess.Location = new Point(6, 26);
             lbMonitoredProcess.Name = "lbMonitoredProcess";
-            lbMonitoredProcess.Size = new Size(355, 284);
+            lbMonitoredProcess.Size = new Size(355, 264);
             lbMonitoredProcess.TabIndex = 4;
             // 
             // gbSearchMonitored
@@ -206,6 +208,16 @@
             txtSearchMonitored.Size = new Size(355, 27);
             txtSearchMonitored.TabIndex = 5;
             txtSearchMonitored.TextChanged += txtSearchMonitored_TextChanged;
+            // 
+            // btnRefreshMonitored
+            // 
+            btnRefreshMonitored.Location = new Point(6, 295);
+            btnRefreshMonitored.Name = "btnRefreshMonitored";
+            btnRefreshMonitored.Size = new Size(355, 36);
+            btnRefreshMonitored.TabIndex = 6;
+            btnRefreshMonitored.Text = "Actualizar";
+            btnRefreshMonitored.UseVisualStyleBackColor = true;
+            btnRefreshMonitored.Click += btnRefreshMonitored_Click;
             // 
             // WatchDog
             // 
@@ -252,5 +264,6 @@
         private GroupBox gbSearchMonitored;
         private TextBox txtSearchMonitored;
         private Button btnRefresh;
+        private Button btnRefreshMonitored;
     }
 }
